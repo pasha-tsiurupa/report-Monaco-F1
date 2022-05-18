@@ -56,6 +56,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--files', required=True, type=str, help='Folder path')
     parser.add_argument('--driver', type=str, help='Driver\'s name')
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('--asc', action='store_true')
+    group.add_argument('--desc', action='store_true')
     args = parser.parse_args()
     rating = print_report(args.files)
 
@@ -64,7 +67,10 @@ def main():
             if args.driver in driver:
                 print(driver)
 
+    elif args.desc:
+        for driver in rating[::-1]:
             print(driver)
+
     elif args.files:
         for racer in rating:
             print(racer)
