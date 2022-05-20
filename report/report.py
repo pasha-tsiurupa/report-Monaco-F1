@@ -3,53 +3,52 @@ import argparse
 
 
 def data_from_file(file_path):
-    file_elements = []
+    file_elements = {}
     with open(file_path) as file:
         for line in file:
             info = line.rstrip()
             driver = info[:3]
-            date_time = datetime.datetime.strptime('{0} {1}'.format(info[3:13], info[14:]), '%Y-%m-%d %H:%M:%S.%f')
-            file_elements.append((driver, date_time))
+            date_time = datetime.datetime.strptime(info[3:], '%Y-%m-%d_%H:%M:%S.%f')
+            file_elements.update({driver: date_time})
     return file_elements
 
 
 def get_abbreviations(folder_path):
-    abbreviation_list = []
+    abbreviations = {}
 
     with open(f'{folder_path}/abbreviations.txt', encoding='utf-8') as f:
         for line in f:
-            abbreviation_list.append(line.rstrip('\n').split('_'))
-    return abbreviation_list
+            abbreviations.update({line[:3]: line[4:].rstrip('\n').split('_')})
+    return abbreviations
 
 
 def build_report(folder_path):
-    res_list = []
     start = data_from_file(f'{folder_path}/start.log')
     end = data_from_file(f'{folder_path}/end.log')
-    print()
-    for item in start:
-        for elem in end:
-            if item[0] == elem[0]:
-                res_time = elem[1] - item[1]
-                res_list.append([item[0], abs(res_time)])
-                res_list.sort(key=lambda i: i[1])
+    res_dict = {}
+    for start_info in start:
+        for end_info in end:
+            if start_info == end_info:
+                result_time = abs(end[end_info] - start[start_info])
+                res_dict.update({start_info: result_time})
+    result = sorted(res_dict.items(), key=lambda i: i[1])
+    res_list = []
+    abbreviations = get_abbreviations(folder_path)
+    for racer, time in result:
+        for abbr in abbreviations:
+            if racer == abbr:
+                res_list.append('{:<17} |{:<25}| {}'.format(
+                    abbreviations[abbr][0], abbreviations[abbr][1], time))
     return res_list
 
 
 def print_report(folder_path):
-    racers_rating = []
-    result = build_report(folder_path)
-    abbreviations = get_abbreviations(folder_path)
-    place = 1
+    res_list = build_report(folder_path)
     next_stage = 15
-    for item in result:
-        for elem in abbreviations:
-            if item[0] == elem[0]:
-                racers_rating.append(f'{str(place)}.{elem[1]} |{elem[2]}| {item[1]}')
-                place += 1
-                if place == next_stage + 1:
-                    racers_rating.append("-" * 65)
-    return racers_rating
+    for place, driver in enumerate(res_list, 1):
+        print(place, driver)
+        if place == next_stage:
+            print("-" * 65)
 
 
 def main():
@@ -60,20 +59,24 @@ def main():
     group.add_argument('--asc', action='store_true')
     group.add_argument('--desc', action='store_true')
     args = parser.parse_args()
-    rating = print_report(args.files)
 
-    if args.driver:
-        for driver in rating:
-            if args.driver in driver:
-                print(driver)
+    if args.files is not None:
+        if args.driver:
+            results = build_report(args.files)
+            for driver in results:
+                if args.driver in driver:
+                    print(driver)
 
-    elif args.desc:
-        for driver in rating[::-1]:
-            print(driver)
+        elif args.desc:
+            results = build_report(args.files)
+            next_stage = 16
+            for place, driver in reversed(list(enumerate(results, 1))):
+                print(place, driver)
+                if place == next_stage:
+                    print("-" * 65)
 
-    elif args.files:
-        for racer in rating:
-            print(racer)
+        elif args.files:
+            print_report(args.files)
 
 
 if __name__ == "__main__":
