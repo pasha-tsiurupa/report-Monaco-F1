@@ -1,5 +1,6 @@
 import datetime
 import argparse
+import sys
 
 
 def data_from_file(file_path):
@@ -51,14 +52,18 @@ def print_report(folder_path):
             print("-" * 65)
 
 
-def main():
+def parse_args(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--files', required=True, type=str, help='Folder path')
     parser.add_argument('--driver', type=str, help='Driver\'s name')
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--asc', action='store_true')
     group.add_argument('--desc', action='store_true')
-    args = parser.parse_args()
+    return parser.parse_args(args)
+
+
+def main(command_line_args):
+    args = parse_args(command_line_args)
 
     if args.files is not None:
         if args.driver:
@@ -80,4 +85,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])
