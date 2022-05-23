@@ -1,2 +1,1 @@
-# Task 6 report Monaco f1
-
+A sample python package printing report of The Monaco Grand Prix Q1 stage.
