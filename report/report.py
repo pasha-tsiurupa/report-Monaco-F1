@@ -1,6 +1,16 @@
 import datetime
 import argparse
 import sys
+import operator
+
+
+class Driver:
+    def __init__(self, name, team):
+        self.name = name
+        self.team = team
+
+    def __str__(self):
+        return f'{self.name}, {self.team}'
 
 
 def data_from_file(file_path):
@@ -10,7 +20,7 @@ def data_from_file(file_path):
             info = line.rstrip()
             driver = info[:3]
             date_time = datetime.datetime.strptime(info[3:], '%Y-%m-%d_%H:%M:%S.%f')
-            file_elements.update({driver: date_time})
+            file_elements[driver] = date_time
     return file_elements
 
 
@@ -19,37 +29,48 @@ def get_abbreviations(folder_path):
 
     with open(f'{folder_path}/abbreviations.txt', encoding='utf-8') as f:
         for line in f:
-            abbreviations.update({line[:3]: line[4:].rstrip('\n').split('_')})
-    return abbreviations
+            abbr, name, team = line.rstrip('\n').split('_')
+            abbreviations[abbr] = str(Driver(name=name, team=team))
+        return abbreviations
 
 
-def build_report(folder_path):
+def build_report(folder_path, *order):
     start = data_from_file(f'{folder_path}/start.log')
     end = data_from_file(f'{folder_path}/end.log')
     res_dict = {}
-    for start_info in start:
-        for end_info in end:
-            if start_info == end_info:
-                result_time = abs(end[end_info] - start[start_info])
-                res_dict.update({start_info: result_time})
-    result = sorted(res_dict.items(), key=lambda i: i[1])
-    res_list = []
+    for abbr, time in end.items():
+        result_time = abs(time - start[abbr])
+        res_dict.update({abbr: result_time})
+    result_list = []
     abbreviations = get_abbreviations(folder_path)
-    for racer, time in result:
-        for abbr in abbreviations:
-            if racer == abbr:
-                res_list.append('{:<17} |{:<25}| {}'.format(
-                    abbreviations[abbr][0], abbreviations[abbr][1], time))
-    return res_list
+    if order is None or order == ():
+        result = sorted(res_dict.items(), key=operator.itemgetter(1))
+        for abbr, time in result:
+            name, team = abbreviations[abbr].split(',')
+            result_list.append('{:<17} |{:<27}| {}'.format(
+                name, team, time))
+    else:
+        result = sorted(res_dict.items(), key=operator.itemgetter(1), reverse=True)
+        for abbr, time in result:
+            name, team = abbreviations[abbr].split(',')
+            result_list.append('{:<17}|{:<27}| {}'.format(
+                name, team, time))
+    return result_list
 
 
-def print_report(folder_path):
-    res_list = build_report(folder_path)
+def print_report(folder_path, *desc):
+    report = build_report(folder_path)
     next_stage = 15
-    for place, driver in enumerate(res_list, 1):
-        print(place, driver)
-        if place == next_stage:
-            print("-" * 65)
+    if desc is None or desc == ():
+        for place, driver in enumerate(report, 1):
+            print(place, driver)
+            if place == next_stage:
+                print("-" * 65)
+    else:
+        for place, driver in reversed(list(enumerate(report, 1))):
+            print(place, driver)
+            if place == next_stage + 1:
+                print("-" * 65)
 
 
 def parse_args(args):
@@ -73,12 +94,7 @@ def main(command_line_args):
                     print(driver)
 
         elif args.desc:
-            results = build_report(args.files)
-            next_stage = 16
-            for place, driver in reversed(list(enumerate(results, 1))):
-                print(place, driver)
-                if place == next_stage:
-                    print("-" * 65)
+            print_report(args.files, args.desc)
 
         elif args.files:
             print_report(args.files)

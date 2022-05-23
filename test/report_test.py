@@ -54,25 +54,25 @@ class TestReport(TestCase):
 
     def test_get_abbreviations(self):
         mock = Mock()
-        mock.get_abbreviations.return_value = {'DRR': ['Daniel Ricciardo', 'RED BULL RACING TAG HEUER'],
-                                               'SVF': ['Sebastian Vettel', 'FERRARI'],
-                                               'LHM': ['Lewis Hamilton', 'MERCEDES'],
-                                               'KRF': ['Kimi Räikkönen', 'FERRARI'],
-                                               'VBM': ['Valtteri Bottas', 'MERCEDES'],
-                                               'EOF': ['Esteban Ocon', 'FORCE INDIA MERCEDES'],
-                                               'FAM': ['Fernando Alonso', 'MCLAREN RENAULT'],
-                                               'CSR': ['Carlos Sainz', 'RENAULT'],
-                                               'SPF': ['Sergio Perez', 'FORCE INDIA MERCEDES'],
-                                               'PGS': ['Pierre Gasly', 'SCUDERIA TORO ROSSO HONDA'],
-                                               'NHR': ['Nico Hulkenberg', 'RENAULT'],
-                                               'SVM': ['Stoffel Vandoorne', 'MCLAREN RENAULT'],
-                                               'SSW': ['Sergey Sirotkin', 'WILLIAMS MERCEDES'],
-                                               'CLS': ['Charles Leclerc', 'SAUBER FERRARI'],
-                                               'RGH': ['Romain Grosjean', 'HAAS FERRARI'],
-                                               'BHS': ['Brendon Hartley', 'SCUDERIA TORO ROSSO HONDA'],
-                                               'MES': ['Marcus Ericsson', 'SAUBER FERRARI'],
-                                               'LSW': ['Lance Stroll', 'WILLIAMS MERCEDES'],
-                                               'KMH': ['Kevin Magnussen', 'HAAS FERRARI']}
+        mock.get_abbreviations.return_value = {'DRR': 'Daniel Ricciardo, RED BULL RACING TAG HEUER',
+                                               'SVF': 'Sebastian Vettel, FERRARI',
+                                               'LHM': 'Lewis Hamilton, MERCEDES',
+                                               'KRF': 'Kimi Räikkönen, FERRARI',
+                                               'VBM': 'Valtteri Bottas, MERCEDES',
+                                               'EOF': 'Esteban Ocon, FORCE INDIA MERCEDES',
+                                               'FAM': 'Fernando Alonso, MCLAREN RENAULT',
+                                               'CSR': 'Carlos Sainz, RENAULT',
+                                               'SPF': 'Sergio Perez, FORCE INDIA MERCEDES',
+                                               'PGS': 'Pierre Gasly, SCUDERIA TORO ROSSO HONDA',
+                                               'NHR': 'Nico Hulkenberg, RENAULT',
+                                               'SVM': 'Stoffel Vandoorne, MCLAREN RENAULT',
+                                               'SSW': 'Sergey Sirotkin, WILLIAMS MERCEDES',
+                                               'CLS': 'Charles Leclerc, SAUBER FERRARI',
+                                               'RGH': 'Romain Grosjean, HAAS FERRARI',
+                                               'BHS': 'Brendon Hartley, SCUDERIA TORO ROSSO HONDA',
+                                               'MES': 'Marcus Ericsson, SAUBER FERRARI',
+                                               'LSW': 'Lance Stroll, WILLIAMS MERCEDES',
+                                               'KMH': 'Kevin Magnussen, HAAS FERRARI'}
         folder_path = os.path.join(os.path.dirname(__file__))
         with patch('builtins.open', mock_open(read_data='DRR_Daniel Ricciardo_RED BULL RACING TAG HEUER\n'
                                                         'SVF_Sebastian Vettel_FERRARI\n'
@@ -99,74 +99,74 @@ class TestReport(TestCase):
     def test_build_report(self):
         folder_path = os.path.join(os.path.dirname(__file__), '../data_files')
         actual_result = build_report(folder_path)
-        expected_result = ['Sebastian Vettel  |FERRARI                  | 0:01:04.415000',
-                           'Valtteri Bottas   |MERCEDES                 | 0:01:12.434000',
-                           'Stoffel Vandoorne |MCLAREN RENAULT          | 0:01:12.463000',
-                           'Kimi Räikkönen    |FERRARI                  | 0:01:12.639000',
-                           'Fernando Alonso   |MCLAREN RENAULT          | 0:01:12.657000',
-                           'Charles Leclerc   |SAUBER FERRARI           | 0:01:12.829000',
-                           'Sergio Perez      |FORCE INDIA MERCEDES     | 0:01:12.848000',
-                           'Romain Grosjean   |HAAS FERRARI             | 0:01:12.930000',
-                           'Pierre Gasly      |SCUDERIA TORO ROSSO HONDA| 0:01:12.941000',
-                           'Carlos Sainz      |RENAULT                  | 0:01:12.950000',
-                           'Nico Hulkenberg   |RENAULT                  | 0:01:13.065000',
-                           'Brendon Hartley   |SCUDERIA TORO ROSSO HONDA| 0:01:13.179000',
-                           'Marcus Ericsson   |SAUBER FERRARI           | 0:01:13.265000',
-                           'Lance Stroll      |WILLIAMS MERCEDES        | 0:01:13.323000',
-                           'Kevin Magnussen   |HAAS FERRARI             | 0:01:13.393000',
-                           'Daniel Ricciardo  |RED BULL RACING TAG HEUER| 0:02:47.987000',
-                           'Sergey Sirotkin   |WILLIAMS MERCEDES        | 0:04:47.294000',
-                           'Esteban Ocon      |FORCE INDIA MERCEDES     | 0:05:46.972000',
-                           'Lewis Hamilton    |MERCEDES                 | 0:06:47.540000']
+        expected_result = ['Sebastian Vettel  | FERRARI                   | 0:01:04.415000',
+                           'Valtteri Bottas   | MERCEDES                  | 0:01:12.434000',
+                           'Stoffel Vandoorne | MCLAREN RENAULT           | 0:01:12.463000',
+                           'Kimi Räikkönen    | FERRARI                   | 0:01:12.639000',
+                           'Fernando Alonso   | MCLAREN RENAULT           | 0:01:12.657000',
+                           'Charles Leclerc   | SAUBER FERRARI            | 0:01:12.829000',
+                           'Sergio Perez      | FORCE INDIA MERCEDES      | 0:01:12.848000',
+                           'Romain Grosjean   | HAAS FERRARI              | 0:01:12.930000',
+                           'Pierre Gasly      | SCUDERIA TORO ROSSO HONDA | 0:01:12.941000',
+                           'Carlos Sainz      | RENAULT                   | 0:01:12.950000',
+                           'Nico Hulkenberg   | RENAULT                   | 0:01:13.065000',
+                           'Brendon Hartley   | SCUDERIA TORO ROSSO HONDA | 0:01:13.179000',
+                           'Marcus Ericsson   | SAUBER FERRARI            | 0:01:13.265000',
+                           'Lance Stroll      | WILLIAMS MERCEDES         | 0:01:13.323000',
+                           'Kevin Magnussen   | HAAS FERRARI              | 0:01:13.393000',
+                           'Daniel Ricciardo  | RED BULL RACING TAG HEUER | 0:02:47.987000',
+                           'Sergey Sirotkin   | WILLIAMS MERCEDES         | 0:04:47.294000',
+                           'Esteban Ocon      | FORCE INDIA MERCEDES      | 0:05:46.972000',
+                           'Lewis Hamilton    | MERCEDES                  | 0:06:47.540000']
         self.assertEqual(actual_result, expected_result)
 
     def test_print_report(self):
-        expected_result = ('1 Sebastian Vettel  |FERRARI                  | 0:01:04.415000\n'
-                           '2 Valtteri Bottas   |MERCEDES                 | 0:01:12.434000\n'
-                           '3 Stoffel Vandoorne |MCLAREN RENAULT          | 0:01:12.463000\n'
-                           '4 Kimi Räikkönen    |FERRARI                  | 0:01:12.639000\n'
-                           '5 Fernando Alonso   |MCLAREN RENAULT          | 0:01:12.657000\n'
-                           '6 Charles Leclerc   |SAUBER FERRARI           | 0:01:12.829000\n'
-                           '7 Sergio Perez      |FORCE INDIA MERCEDES     | 0:01:12.848000\n'
-                           '8 Romain Grosjean   |HAAS FERRARI             | 0:01:12.930000\n'
-                           '9 Pierre Gasly      |SCUDERIA TORO ROSSO HONDA| 0:01:12.941000\n'
-                           '10 Carlos Sainz      |RENAULT                  | 0:01:12.950000\n'
-                           '11 Nico Hulkenberg   |RENAULT                  | 0:01:13.065000\n'
-                           '12 Brendon Hartley   |SCUDERIA TORO ROSSO HONDA| 0:01:13.179000\n'
-                           '13 Marcus Ericsson   |SAUBER FERRARI           | 0:01:13.265000\n'
-                           '14 Lance Stroll      |WILLIAMS MERCEDES        | 0:01:13.323000\n'
-                           '15 Kevin Magnussen   |HAAS FERRARI             | 0:01:13.393000\n'
+        expected_result = ('1 Sebastian Vettel  | FERRARI                   | 0:01:04.415000\n'
+                           '2 Valtteri Bottas   | MERCEDES                  | 0:01:12.434000\n'
+                           '3 Stoffel Vandoorne | MCLAREN RENAULT           | 0:01:12.463000\n'
+                           '4 Kimi Räikkönen    | FERRARI                   | 0:01:12.639000\n'
+                           '5 Fernando Alonso   | MCLAREN RENAULT           | 0:01:12.657000\n'
+                           '6 Charles Leclerc   | SAUBER FERRARI            | 0:01:12.829000\n'
+                           '7 Sergio Perez      | FORCE INDIA MERCEDES      | 0:01:12.848000\n'
+                           '8 Romain Grosjean   | HAAS FERRARI              | 0:01:12.930000\n'
+                           '9 Pierre Gasly      | SCUDERIA TORO ROSSO HONDA | 0:01:12.941000\n'
+                           '10 Carlos Sainz      | RENAULT                   | 0:01:12.950000\n'
+                           '11 Nico Hulkenberg   | RENAULT                   | 0:01:13.065000\n'
+                           '12 Brendon Hartley   | SCUDERIA TORO ROSSO HONDA | 0:01:13.179000\n'
+                           '13 Marcus Ericsson   | SAUBER FERRARI            | 0:01:13.265000\n'
+                           '14 Lance Stroll      | WILLIAMS MERCEDES         | 0:01:13.323000\n'
+                           '15 Kevin Magnussen   | HAAS FERRARI              | 0:01:13.393000\n'
                            '-----------------------------------------------------------------\n'
-                           '16 Daniel Ricciardo  |RED BULL RACING TAG HEUER| 0:02:47.987000\n'
-                           '17 Sergey Sirotkin   |WILLIAMS MERCEDES        | 0:04:47.294000\n'
-                           '18 Esteban Ocon      |FORCE INDIA MERCEDES     | 0:05:46.972000\n'
-                           '19 Lewis Hamilton    |MERCEDES                 | 0:06:47.540000\n')
+                           '16 Daniel Ricciardo  | RED BULL RACING TAG HEUER | 0:02:47.987000\n'
+                           '17 Sergey Sirotkin   | WILLIAMS MERCEDES         | 0:04:47.294000\n'
+                           '18 Esteban Ocon      | FORCE INDIA MERCEDES      | 0:05:46.972000\n'
+                           '19 Lewis Hamilton    | MERCEDES                  | 0:06:47.540000\n')
         folder_path = os.path.join(os.path.dirname(__file__), '../data_files')
         with patch('sys.stdout', new=StringIO()) as output:
             print_report(folder_path)
             self.assertEqual(output.getvalue(), expected_result)
 
     def test_desc_report(self):
-        expected_result = ('19 Lewis Hamilton    |MERCEDES                 | 0:06:47.540000\n'
-                           '18 Esteban Ocon      |FORCE INDIA MERCEDES     | 0:05:46.972000\n'
-                           '17 Sergey Sirotkin   |WILLIAMS MERCEDES        | 0:04:47.294000\n'
-                           '16 Daniel Ricciardo  |RED BULL RACING TAG HEUER| 0:02:47.987000\n'
+        expected_result = ('19 Lewis Hamilton    | MERCEDES                  | 0:06:47.540000\n'
+                           '18 Esteban Ocon      | FORCE INDIA MERCEDES      | 0:05:46.972000\n'
+                           '17 Sergey Sirotkin   | WILLIAMS MERCEDES         | 0:04:47.294000\n'
+                           '16 Daniel Ricciardo  | RED BULL RACING TAG HEUER | 0:02:47.987000\n'
                            '-----------------------------------------------------------------\n'
-                           '15 Kevin Magnussen   |HAAS FERRARI             | 0:01:13.393000\n'
-                           '14 Lance Stroll      |WILLIAMS MERCEDES        | 0:01:13.323000\n'
-                           '13 Marcus Ericsson   |SAUBER FERRARI           | 0:01:13.265000\n'
-                           '12 Brendon Hartley   |SCUDERIA TORO ROSSO HONDA| 0:01:13.179000\n'
-                           '11 Nico Hulkenberg   |RENAULT                  | 0:01:13.065000\n'
-                           '10 Carlos Sainz      |RENAULT                  | 0:01:12.950000\n'
-                           '9 Pierre Gasly      |SCUDERIA TORO ROSSO HONDA| 0:01:12.941000\n'
-                           '8 Romain Grosjean   |HAAS FERRARI             | 0:01:12.930000\n'
-                           '7 Sergio Perez      |FORCE INDIA MERCEDES     | 0:01:12.848000\n'
-                           '6 Charles Leclerc   |SAUBER FERRARI           | 0:01:12.829000\n'
-                           '5 Fernando Alonso   |MCLAREN RENAULT          | 0:01:12.657000\n'
-                           '4 Kimi Räikkönen    |FERRARI                  | 0:01:12.639000\n'
-                           '3 Stoffel Vandoorne |MCLAREN RENAULT          | 0:01:12.463000\n'
-                           '2 Valtteri Bottas   |MERCEDES                 | 0:01:12.434000\n'
-                           '1 Sebastian Vettel  |FERRARI                  | 0:01:04.415000\n')
+                           '15 Kevin Magnussen   | HAAS FERRARI              | 0:01:13.393000\n'
+                           '14 Lance Stroll      | WILLIAMS MERCEDES         | 0:01:13.323000\n'
+                           '13 Marcus Ericsson   | SAUBER FERRARI            | 0:01:13.265000\n'
+                           '12 Brendon Hartley   | SCUDERIA TORO ROSSO HONDA | 0:01:13.179000\n'
+                           '11 Nico Hulkenberg   | RENAULT                   | 0:01:13.065000\n'
+                           '10 Carlos Sainz      | RENAULT                   | 0:01:12.950000\n'
+                           '9 Pierre Gasly      | SCUDERIA TORO ROSSO HONDA | 0:01:12.941000\n'
+                           '8 Romain Grosjean   | HAAS FERRARI              | 0:01:12.930000\n'
+                           '7 Sergio Perez      | FORCE INDIA MERCEDES      | 0:01:12.848000\n'
+                           '6 Charles Leclerc   | SAUBER FERRARI            | 0:01:12.829000\n'
+                           '5 Fernando Alonso   | MCLAREN RENAULT           | 0:01:12.657000\n'
+                           '4 Kimi Räikkönen    | FERRARI                   | 0:01:12.639000\n'
+                           '3 Stoffel Vandoorne | MCLAREN RENAULT           | 0:01:12.463000\n'
+                           '2 Valtteri Bottas   | MERCEDES                  | 0:01:12.434000\n'
+                           '1 Sebastian Vettel  | FERRARI                   | 0:01:04.415000\n')
         folder_path = os.path.join(os.path.dirname(__file__), '../data_files')
         args = ['--files', folder_path, '--desc']
         with patch('sys.stdout', new=StringIO()) as output:
@@ -175,9 +175,9 @@ class TestReport(TestCase):
 
     def test_driver_stats(self):
         testcases = [
-            ('Daniel Ricciardo', 'Daniel Ricciardo  |RED BULL RACING TAG HEUER| 0:02:47.987000\n'),
-            ('Sebastian Vettel', 'Sebastian Vettel  |FERRARI                  | 0:01:04.415000\n'),
-            ('Lewis Hamilton', 'Lewis Hamilton    |MERCEDES                 | 0:06:47.540000\n')
+            ('Daniel Ricciardo', 'Daniel Ricciardo  | RED BULL RACING TAG HEUER | 0:02:47.987000\n'),
+            ('Sebastian Vettel', 'Sebastian Vettel  | FERRARI                   | 0:01:04.415000\n'),
+            ('Lewis Hamilton', 'Lewis Hamilton    | MERCEDES                  | 0:06:47.540000\n')
         ]
 
         folder_path = os.path.join(os.path.dirname(__file__), '../data_files')
