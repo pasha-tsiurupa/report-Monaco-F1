@@ -43,7 +43,7 @@ def build_report(folder_path, *order):
         res_dict.update({abbr: result_time})
     result_list = []
     abbreviations = get_abbreviations(folder_path)
-    if order is None or order == ():
+    if order == ():
         result = sorted(res_dict.items(), key=operator.itemgetter(1))
         for abbr, time in result:
             name, team = abbreviations[abbr].split(',')
@@ -61,7 +61,7 @@ def build_report(folder_path, *order):
 def print_report(folder_path, *desc):
     report = build_report(folder_path)
     next_stage = 15
-    if desc is None or desc == ():
+    if desc == ():
         for place, driver in enumerate(report, 1):
             print(place, driver)
             if place == next_stage:
