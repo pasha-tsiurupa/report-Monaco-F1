@@ -2,6 +2,7 @@ import argparse
 from dataclasses import dataclass
 from datetime import datetime
 from datetime import timedelta
+import sys
 
 
 @dataclass
@@ -14,15 +15,11 @@ class Driver:
 
     @property
     def lap_time(self):
-        try:
-            time_delta = datetime.fromisoformat(self.time_end) - datetime.fromisoformat(self.time_start)
-            if time_delta.days < 0 or time_delta.seconds > 1200:
-                self.best_time = 'Error'
-            else:
-                self.best_time = time_delta
-        except:
-            self.best_time = 'Error'
-        return self.best_time
+        time_delta = datetime.fromisoformat(self.time_end) - datetime.fromisoformat(self.time_start)
+        if time_delta.days < 0 or time_delta.seconds > 1200:
+            return None
+        else:
+            return time_delta
 
 
 def data_from_file(file_path):
@@ -31,7 +28,7 @@ def data_from_file(file_path):
         for line in file:
             info = line.rstrip()
             driver = info[:3]
-            time = info[3:].replace('_', ' ').rstrip('\n')
+            time = info[3:].format('%Y-%m-%d_%H:%M:%S.%f')
             file_elements[driver] = time
     return file_elements
 
@@ -68,29 +65,28 @@ def get_attribute_max_length(data, attr_name):
 
 def build_report(folder_path):
     data = load_data(folder_path)
-    max_len_name = get_attribute_max_length(data, 'name')
-    max_len_team = get_attribute_max_length(data, 'team')
     ready_report = []
     place = 1
     report = sorted(data, key=lambda time: time.lap_time if isinstance(time.lap_time, timedelta) else timedelta.max)
-    for racer in report:
-        if place == 16:
-            ready_report.append('-' * 65)
-        ready_report.append(
-            (f'{{0:2}}. {{1:{max_len_name}}} | {{2:{max_len_team}}} | {{3:11.11}}').format(place,
-                                                                                           racer.name, racer.team,
-                                                                                           str(racer.lap_time)))
+    for driver in report:
+        ready_report.append((place, driver.name, driver.team, str(driver.lap_time)))
         place += 1
     return ready_report
 
 
-def print_report(path, asc_sort=True):
-    result = build_report(path)
+def print_report(folder_path, asc_sort=True):
+    result = build_report(folder_path)
+    next_stage_positions = 16
+    report = []
+    for driver in result:
+        if driver[0] == next_stage_positions:
+            report.append('-' * 65)
+        report.append('{0:2}.{1:17} | {2:25} | {3}'.format(driver[0], driver[1],
+                                                           driver[2], driver[3]))
     if not asc_sort:
-        result.reverse()
-    for string in result:
-        print(string)
-    return result
+        report.reverse()
+    for driver in report:
+        print(driver)
 
 
 def get_racer_info(path, racer_name):
@@ -100,23 +96,23 @@ def get_racer_info(path, racer_name):
             return f'{racer.name} | {racer.team} | {racer.lap_time}'
 
 
-def parse_args(*args):
+def parse_args(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('--files', type=str, help='Folder path')
     parser.add_argument('--driver', type=str, help='Driver\'s name')
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('--asc', action='store_const', const=True, help='Ascending sort')
-    group.add_argument('--desc', action='store_const', const=True, help='Descending sort')
-    return parser.parse_args(*args)
+    group.add_argument('--asc', action='store_const', dest='order', const='asc', help='Ascending sort')
+    group.add_argument('--desc', action='store_const', dest='order', const='desc', help='Ascending sort')
+    return parser.parse_args(args)
 
 
 def main():
-    args = parse_args()
+    args = parse_args(sys.argv[1:])
     if args.files is not None:
         if args.driver:
             print(get_racer_info(args.files, args.driver))
         else:
-            asc = False if args.desc else True
+            asc = False if args.order else True
             print_report(args.files, asc)
 
 
