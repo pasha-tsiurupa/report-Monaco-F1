@@ -10,12 +10,12 @@ class Driver:
     abbreviation: str
     name: str
     team: str
-    time_start: str = None
-    time_end: str = None
+    time_start: datetime = None
+    time_end: datetime = None
 
     @property
     def lap_time(self):
-        time_delta = datetime.fromisoformat(self.time_end) - datetime.fromisoformat(self.time_start)
+        time_delta = self.time_end - self.time_start
         if time_delta.days < 0 or time_delta.seconds > 1200:
             return None
         else:
@@ -28,7 +28,7 @@ def data_from_file(file_path):
         for line in file:
             info = line.rstrip()
             driver = info[:3]
-            time = info[3:].format('%Y-%m-%d_%H:%M:%S.%f')
+            time = datetime.strptime(info[3:], '%Y-%m-%d_%H:%M:%S.%f')
             file_elements[driver] = time
     return file_elements
 
@@ -59,17 +59,13 @@ def load_data(path):
     return join_info(racer_info, time_start, time_end)
 
 
-def get_attribute_max_length(data, attr_name):
-    return max(map(lambda x: len(getattr(x, attr_name)), data))
-
-
 def build_report(folder_path):
     data = load_data(folder_path)
-    ready_report = []
+    ready_report = {}
     place = 1
     report = sorted(data, key=lambda time: time.lap_time if isinstance(time.lap_time, timedelta) else timedelta.max)
     for driver in report:
-        ready_report.append((place, driver.name, driver.team, str(driver.lap_time)))
+        ready_report.update({driver.name: [place, driver.team, str(driver.lap_time)]})
         place += 1
     return ready_report
 
@@ -79,10 +75,10 @@ def print_report(folder_path, asc_sort=True):
     next_stage_positions = 16
     report = []
     for driver in result:
-        if driver[0] == next_stage_positions:
+        if result[driver][0] == next_stage_positions:
             report.append('-' * 65)
-        report.append('{0:2}.{1:17} | {2:25} | {3}'.format(driver[0], driver[1],
-                                                           driver[2], driver[3]))
+        report.append('{0:2}.{1:17} | {2:25} | {3}'.format(result[driver][0], driver,
+                                                           result[driver][1], result[driver][2]))
     if not asc_sort:
         report.reverse()
     for driver in report:
