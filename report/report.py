@@ -65,7 +65,7 @@ def build_report(folder_path):
     place = 1
     report = sorted(data, key=lambda time: time.lap_time if isinstance(time.lap_time, timedelta) else timedelta.max)
     for driver in report:
-        ready_report.update({driver.name: [place, driver.team, str(driver.lap_time)]})
+        ready_report[driver.name] = [place, driver.team, str(driver.lap_time)]
         place += 1
     return ready_report
 

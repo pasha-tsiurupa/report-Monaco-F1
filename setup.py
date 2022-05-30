@@ -4,8 +4,8 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="monaco_Q1_report_Pavlo_Tsiurupa",
-    version="1.0.0",
+    name="monaco_Q1_report",
+    version="0.1.0",
     author="Pavlo Tsiurupa",
     author_email="pavlotsiurupa@gmail.com",
     description="Report of Monaco Q1 stage",
